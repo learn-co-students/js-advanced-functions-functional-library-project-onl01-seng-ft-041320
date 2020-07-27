@@ -6,7 +6,7 @@ const fi = (function() {
 
     each: function(collection, alert) {
       for (let i = 0; i < collection.length; i++){
-        alert(collection[i], i, collection.values)
+        alert(collection[i], i, Object.values(collection))
       }
       return collection
     },
