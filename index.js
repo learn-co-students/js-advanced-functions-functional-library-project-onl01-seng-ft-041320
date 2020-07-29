@@ -21,11 +21,11 @@ const fi = (function() {
       return newArray
     },
 
-    reduce: function(collection = [], callback = () => {}, accumulation = 0) {
-        let newCollection = collection.slice[0]
+    reduce: function(collection = [], callback = () => {}, accumulation) {
+        let newCollection = collection.slice(0)
         if (!accumulation) {
           accumulation = newCollection[0]
-          newCollection = newCollection.slice[1]
+          newCollection = newCollection.slice(1)
         }
         for (let i = 0; i < newCollection.length; i++) {
           accumulation = callback(accumulation, newCollection[i], newCollection)
@@ -33,55 +33,106 @@ const fi = (function() {
         return accumulation
     },
 
-    find: function() {
-
+    find: function(collection, predicate) {
+      for (let i = 0; i < collection.length; i++) {
+        if (predicate(collection[i])) {
+          return collection[i]
+        }
+      }
     },
 
-    filter: function() {
-
+    filter: function(collection, predicate) {
+      let array = []
+      for (let i = 0; i <collection.length; i++) {
+        if (predicate(collection[i])) {
+          array.push(collection[i])
+        }
+      }
+      return array
     },
 
-    size: function() {
-
+    size: function(collection) {
+      let newCollection = Object.values(collection)
+      let num = 0
+      for (let i = 0; i < newCollection.length; i++) {
+        num += 1
+      }
+      return num
     },
 
-    first: function() {
-
+    first: function(collection, n = 0) {
+      return n ? collection.slice(0, n) : collection[0]
     },
 
-    last: function() {
-
+    last: function(collection, n = 0) {
+      return n ? collection.slice(collection.length - n, collection.length) : collection[collection.length-1]
     },
 
-    compact: function() {
+    compact: function(collection) {
+      let newCollection = []
+      for (let i = 0; i < collection.length; i++) {
+        if (collection[i]) {
+          newCollection.push(collection[i])
+        }
+      }
+      return newCollection
+    }, 
 
+    sortBy: function(collection, callback) {
+      let newArray = [...collection]
+      return newArray.sort(function(a, b) {
+        return callback(a) - callback (b)
+      })
     },
 
-    sortBy: function() {
-
+    flatten: function(a, shallow = a.length) {
+      return a.flat(shallow)
+    },
+//Don't understand this:
+    uniq: function(collection, sorted=false, iteratee=false) {
+      if (sorted) {
+        return fi.uniqSorted(collection, iteratee)
+      } else if (!iteratee) {
+        return Array.from(new Set(collection))
+      } else {
+        const modifiedVals = new Set()
+        const uniqVals = new Set()
+        for (let val of collection) {
+          const moddedVal = iteratee(val)
+          if (!modifiedVals.has(moddedVal)) {
+            modifiedVals.add(moddedVal)
+            uniqVals.add(val)
+          }
+        }
+        return Array.from(uniqVals)
+      }
     },
 
-    flatten: function() {
-
+    keys: function(obj) {
+      const keys = []
+      for (let key in obj) {
+        keys.push(key)
+      }
+      return keys
     },
 
-    unique: function() {
-
+    values: function(obj) {
+      const values = [] 
+      for (let key in obj) {
+        values.push(obj[key])
+      }
+      return values
     },
 
-    keys: function() {
-
+    functions: function(obj) {
+      const functionNames = []
+      for (let key in obj) {
+        if (typeof obj[key] === "function") {
+          functionNames.push(key)
+        }
+      }
+      return functionNames.sort()
     },
-
-    values: function() {
-
-    },
-
-    functions: function() {
-
-    },
-
-
   }
 })()
 
